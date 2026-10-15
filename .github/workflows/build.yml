@@ -23,7 +23,30 @@ jobs:
           gradle-version: '9.2.0'
 
       - name: Build
-        run: gradle clean build --no-daemon --stacktrace
+        run: |
+          set +e
+          gradle clean build --no-daemon 2>&1 | tee build.log
+          code=${PIPESTATUS[0]}
+          if [ "$code" -ne 0 ]; then
+            python3 - <<'PY'
+          import re
+          lines = [l.rstrip() for l in open('build.log', errors='replace')]
+          keep = []
+          for i, l in enumerate(lines):
+              if re.search(r'error:|What went wrong|FAILED|Could not|Unsupported|not found|cannot find symbol|does not exist|Caused by|Exception', l, re.I):
+                  keep.extend(lines[max(0, i-1):i+4])
+          out = []
+          seen = set()
+          for l in keep:
+              if l not in seen and not l.strip().startswith('at '):
+                  seen.add(l)
+                  out.append(l)
+          msg = '\n'.join(out[:70]) or '\n'.join(lines[-40:])
+          msg = msg.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error title=BuildLog::' + msg)
+          PY
+          fi
+          exit $code
 
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
