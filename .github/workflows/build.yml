@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,19 +16,21 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: '25'
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.14
+          gradle-version: '9.2.0'
 
       - name: Build
-        run: gradle build --no-daemon
+        run: gradle clean build --no-daemon --stacktrace
 
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
           name: nebula-client-mod
           path: |
-            build/libs/*.jar
+            build/libs/nebula-client-*.jar
             !build/libs/*-sources.jar
+          if-no-files-found: error
+          retention-days: 14
