@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "nebula",
+  "version": "${version}",
+  "name": "Nebula Client",
+  "description": "A clean module menu with FPS optimizer, coordinate-grid map HUD, themes, configs and keybinds.",
+  "authors": ["You"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.nebula.NebulaClient"]
+  },
+  "mixins": ["nebula.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

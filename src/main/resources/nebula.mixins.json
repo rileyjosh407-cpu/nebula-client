@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.nebula.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ParticleManagerMixin",
+    "EntityRenderManagerMixin",
+    "SoundSystemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
