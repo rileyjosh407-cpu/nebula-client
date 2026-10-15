@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -57,3 +57,16 @@ jobs:
             !build/libs/*-sources.jar
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          JAR=$(ls build/libs/nebula-client-*.jar | grep -v -- '-sources' | head -n 1)
+          echo "Publishing $JAR"
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest "$JAR" \
+            --target "$GITHUB_SHA" \
+            --title "Nebula Client (latest build)" \
+            --notes "Fabric 1.21.11 mod. Download the .jar below, put it in your mods folder with Fabric Loader 0.19.x and Fabric API 0.141.3+1.21.11."
