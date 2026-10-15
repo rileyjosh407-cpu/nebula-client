@@ -28,7 +28,7 @@ public class NebulaClient implements ClientModInitializer {
 
 		KeyBinding.Category category = KeyBinding.Category.create(Identifier.of(ID, "main"));
 		openMenu = KeyBindingHelper.registerKeyBinding(
-			new KeyBinding("key.nebula.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, category));
+			new KeyBinding("key.nebula.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, category));
 
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
 			while (openMenu.wasPressed()) {
